@@ -58,9 +58,12 @@ if specPackagePath = FindParentDir.sync(testPaths[0], 'package.json')
 if specDirectory = FindParentDir.sync(testPaths[0], 'fixtures')
   specProjectPath = path.join(specDirectory, 'fixtures')
 else
-  specProjectPath = path.join(__dirname, 'fixtures')
+  specProjectPath = require('os').tmpdir()
 
 beforeEach ->
+  # Do not clobber recent project history
+  spyOn(atom.history, 'saveState').andReturn(Promise.resolve())
+
   atom.project.setPaths([specProjectPath])
 
   window.resetTimeouts()
